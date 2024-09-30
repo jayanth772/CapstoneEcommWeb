@@ -100,6 +100,44 @@ public class AddtoCart {
 
     }
 
+    @Test
+    public void validateCart()  {
+
+        driver.findElement(By.xpath("//summary[@aria-label='Search']//span")).click();
+        driver.findElement(By.id("Search-In-Modal")).sendKeys("Slim Fit Jean in Indigo");
+        driver.findElement(By.xpath("//button[@class='search__button field__button']")).click();
+        WebElement prodlink = driver.findElement(By.xpath("//a[@class='full-unstyled-link']"));
+        prodlink.click();
+        String size = "34";
+        driver.findElement(By.xpath("//label[normalize-space()='" + size + "']")).click();
+        WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(10));
+        WebElement addtocartbutton = driver.findElement(By.xpath("//button[@name='add']"));
+        wait.until(ExpectedConditions.elementToBeClickable(addtocartbutton));
+        addtocartbutton.click();
+
+
+        //Verifying viewcart button enabled or not
+        WebElement viewcart = driver.findElement(By.xpath("//a[@class='button button--secondary button--full-width']"));
+        wait.until(ExpectedConditions.elementToBeClickable(viewcart));
+        String text = driver.findElement(By.xpath("//h2[@class='cart-notification__heading caption-large']")).getText().trim();
+        viewcart.click();
+
+        //Verifying the name,size in the cart page
+        String sizetext = driver.findElement(By.xpath("//div[@class='product-option'][1]//dd")).getText();
+        String colortext = driver.findElement(By.xpath("//div[@class='product-option'][2]//dd")).getText();
+        Assert.assertEquals(sizetext,size);
+        Assert.assertEquals(colortext,"Indigo");
+
+        //Verifying the price,total price in the cart page
+        String price = "378.00";
+        String totalprice = "359.10";
+        String pricetext = driver.findElement(By.xpath("//td[@class='cart-item__totals right small-hide']//span")).getText();
+        String totalpricetext = driver.findElement(By.xpath("//p[@class='totals__subtotal-value']")).getText();
+        Assert.assertEquals(pricetext.substring(4),price);
+        Assert.assertEquals(totalpricetext.substring(4),totalprice);
+
+    }
+
 
 
    @AfterMethod
