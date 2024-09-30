@@ -43,6 +43,24 @@ public class AddtoCart {
 
     }
 
+    @Test
+    public void productAvailability()
+    {
+        driver.findElement(By.xpath("//summary[@aria-label='Search']//span")).click();
+        driver.findElement(By.id("Search-In-Modal")).sendKeys("Belted Jeans");
+        driver.findElement(By.xpath("//button[@class='search__button field__button']")).click();
+        WebElement prodlink = driver.findElement(By.xpath("//a[contains(text(),'Belted Jeans')]"));
+        prodlink.click();
+        WebElement addtocartbutton = driver.findElement(By.xpath("//button[@class='product-form__submit button button--full-width button--secondary']"));
+        if(addtocartbutton.isEnabled())
+        {
+            addtocartbutton.click();
+        }
+        else {
+            Reporter.log("Item is out of stock");
+        }
+    }
+
 
 
    @AfterMethod
