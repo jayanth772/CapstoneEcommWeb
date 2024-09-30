@@ -27,11 +27,6 @@ public class AddtoCart {
         driver.manage().window().maximize();
     }
 
-    public static int randomnum(int num)
-    {
-        Random rand = new Random();
-        return rand.nextInt(num)+1;
-    }
 
     @Test
     public void identifyProduct()
