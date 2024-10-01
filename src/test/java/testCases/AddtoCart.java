@@ -132,13 +132,14 @@ public class AddtoCart {
         Assert.assertEquals(sizetext,size);
         Assert.assertEquals(colortext,"Indigo");
         Assert.assertEquals(quantity,expectedquantity);
+        double discountpercentage = 0.05;
 
         //Verifying the price,total price in the cart page
         String pricetext = driver.findElement(By.xpath("//td[@class='cart-item__totals right small-hide']//span")).getText();
         String totalpricetext = driver.findElement(By.xpath("//p[@class='totals__subtotal-value']")).getText();
         double priceindouble = Double.valueOf(pricetext.substring(4));
-        double totalprice = priceindouble*0.05;
-        double finaltotalprice = priceindouble -totalprice;
+        double totalprice = priceindouble*discountpercentage;
+        double finaltotalprice = priceindouble-totalprice;
           //verifying price
         Assert.assertEquals(pricetext.substring(4),price);
         double totalpriceindouble = Double.valueOf(totalpricetext.substring(4));
