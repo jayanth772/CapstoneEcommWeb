@@ -102,8 +102,9 @@ public class AddtoCart {
     @Test
     public void validateCart()  {
 
+        String prodname ="Slim Fit Jean in Indigo";
         driver.findElement(By.xpath("//summary[@aria-label='Search']//span")).click();
-        driver.findElement(By.id("Search-In-Modal")).sendKeys("Slim Fit Jean in Indigo");
+        driver.findElement(By.id("Search-In-Modal")).sendKeys(prodname);
         driver.findElement(By.xpath("//button[@class='search__button field__button']")).click();
         WebElement prodlink = driver.findElement(By.xpath("//a[@class='full-unstyled-link']"));
         prodlink.click();
@@ -114,6 +115,7 @@ public class AddtoCart {
         wait.until(ExpectedConditions.elementToBeClickable(addtocartbutton));
         //fetching price of the item
         String price = driver.findElement(By.xpath("//span[@class='price-item price-item--regular']")).getText().trim().substring(4);
+        String name = driver.findElement(By.className("product__title")).getText().trim();
         addtocartbutton.click();
 
 
@@ -123,12 +125,13 @@ public class AddtoCart {
         String text = driver.findElement(By.xpath("//h2[@class='cart-notification__heading caption-large']")).getText().trim();
         viewcart.click();
 
-        //Verifying the name,size,quantity in the cart page
+        //Verifying the name,size,color,quantity in the cart page
         List<WebElement> items= driver.findElements(By.xpath("//tr[@class='cart-item']"));
         int quantity = items.size();
         int expectedquantity = 1;
         String sizetext = driver.findElement(By.xpath("//div[@class='product-option'][1]//dd")).getText();
         String colortext = driver.findElement(By.xpath("//div[@class='product-option'][2]//dd")).getText();
+        Assert.assertEquals(prodname,name);
         Assert.assertEquals(sizetext,size);
         Assert.assertEquals(colortext,"Indigo");
         Assert.assertEquals(quantity,expectedquantity);
@@ -138,8 +141,8 @@ public class AddtoCart {
         String pricetext = driver.findElement(By.xpath("//td[@class='cart-item__totals right small-hide']//span")).getText();
         String totalpricetext = driver.findElement(By.xpath("//p[@class='totals__subtotal-value']")).getText();
         double priceindouble = Double.valueOf(pricetext.substring(4));
-        double totalprice = priceindouble*discountpercentage;
-        double finaltotalprice = priceindouble-totalprice;
+        //double totalprice = priceindouble*discountpercentage;
+        double finaltotalprice = priceindouble - (priceindouble * discountpercentage);
           //verifying price
         Assert.assertEquals(pricetext.substring(4),price);
         double totalpriceindouble = Double.valueOf(totalpricetext.substring(4));
@@ -153,6 +156,7 @@ public class AddtoCart {
    @AfterMethod
     public void closeBrowser()
     {
+
         driver.quit();
    }
 }
