@@ -14,7 +14,6 @@ import org.testng.annotations.Test;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.Random;
 
 public class AddtoCart {
 
@@ -113,6 +112,8 @@ public class AddtoCart {
         WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(10));
         WebElement addtocartbutton = driver.findElement(By.xpath("//button[@name='add']"));
         wait.until(ExpectedConditions.elementToBeClickable(addtocartbutton));
+        //fetching price of the item
+        String price = driver.findElement(By.xpath("//span[@class='price-item price-item--regular']")).getText().trim().substring(4);
         addtocartbutton.click();
 
 
@@ -122,19 +123,27 @@ public class AddtoCart {
         String text = driver.findElement(By.xpath("//h2[@class='cart-notification__heading caption-large']")).getText().trim();
         viewcart.click();
 
-        //Verifying the name,size in the cart page
+        //Verifying the name,size,quantity in the cart page
+        List<WebElement> items= driver.findElements(By.xpath("//tr[@class='cart-item']"));
+        int quantity = items.size();
+        int expectedquantity = 1;
         String sizetext = driver.findElement(By.xpath("//div[@class='product-option'][1]//dd")).getText();
         String colortext = driver.findElement(By.xpath("//div[@class='product-option'][2]//dd")).getText();
         Assert.assertEquals(sizetext,size);
         Assert.assertEquals(colortext,"Indigo");
+        Assert.assertEquals(quantity,expectedquantity);
 
         //Verifying the price,total price in the cart page
-        String price = "378.00";
-        String totalprice = "359.10";
         String pricetext = driver.findElement(By.xpath("//td[@class='cart-item__totals right small-hide']//span")).getText();
         String totalpricetext = driver.findElement(By.xpath("//p[@class='totals__subtotal-value']")).getText();
+        double priceindouble = Double.valueOf(pricetext.substring(4));
+        double totalprice = priceindouble*0.05;
+        double finaltotalprice = priceindouble -totalprice;
+          //verifying price
         Assert.assertEquals(pricetext.substring(4),price);
-        Assert.assertEquals(totalpricetext.substring(4),totalprice);
+        double totalpriceindouble = Double.valueOf(totalpricetext.substring(4));
+          //verifying total
+        Assert.assertEquals(totalpriceindouble, finaltotalprice);
 
     }
 
