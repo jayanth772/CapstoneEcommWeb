@@ -151,12 +151,41 @@ public class AddtoCart {
 
     }
 
+    @Test
+    public void removeProductFromCart() throws InterruptedException {
+        String prodname ="Slim Fit Jean in Indigo";
+        driver.findElement(By.xpath("//summary[@aria-label='Search']//span")).click();
+        driver.findElement(By.id("Search-In-Modal")).sendKeys(prodname);
+        driver.findElement(By.xpath("//button[@class='search__button field__button']")).click();
+        WebElement prodlink = driver.findElement(By.xpath("//a[@class='full-unstyled-link']"));
+        prodlink.click();
+        WebElement addtocartbutton = driver.findElement(By.xpath("//button[@name='add']"));
+        addtocartbutton.click();
+
+        //Verifying viewcart button enabled or not
+        WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(10));
+        WebElement viewcart = driver.findElement(By.xpath("//a[@class='button button--secondary button--full-width']"));
+        wait.until(ExpectedConditions.elementToBeClickable(viewcart));
+        viewcart.click();
+
+        //Removing the items from cart
+        List<WebElement> items = driver.findElements(By.xpath("//a[@class='button button--tertiary']"));
+        for (WebElement item : items) {
+            item.click();
+            Thread.sleep(Duration.ofSeconds(2));
+        }
+
+        //Verifying cart is empty or not
+        List<WebElement> items2 = driver.findElements(By.xpath("//tr[@class='cart-item']"));
+        Assert.assertTrue(items2.isEmpty());
+
+    }
+
 
 
    @AfterMethod
     public void closeBrowser()
     {
-
         driver.quit();
    }
 }
